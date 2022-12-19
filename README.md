@@ -128,3 +128,11 @@ Read [Detox setup instructions](./detox/README.md).
 - [2017 aka Andross](https://github.com/infinitered/ignite-andross)
 - [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)
 
+
+username password
+ignite@infinite.red
+ign1teIsAwes0m3
+
+pocketbase
+aryaabyte@gmail.com
+1234567890

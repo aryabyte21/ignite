@@ -7,9 +7,9 @@ const en = {
   },
   welcomeScreen: {
     postscript:
-      "psst  — This probably isn't what your app looks like. (Unless your designer handed you these screens, and in that case, ship it!)",
-    readyForLaunch: "Your app, almost ready for launch!",
-    exciting: "(ohh, this is exciting!)",
+      "psst  — Secret tip you can also try monetizing your notes. Who thought you could make money by sharing notes! Lets gooo",
+    readyForLaunch: "Dive into notes",
+    exciting: "Sharing is caring upload your notes read your friend's notes",
     letsGo: "Let's go!", // @demo remove-current-line
   },
   errorScreen: {
@@ -33,12 +33,27 @@ const en = {
   loginScreen: {
     signIn: "Sign In",
     enterDetails:
-      "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
+      "Dive into notes. Make, Share, Sell notes.",
     emailFieldLabel: "Email",
     passwordFieldLabel: "Password",
     emailFieldPlaceholder: "Enter your email address",
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
+    hint: "Hint: you can use any email address and your favorite password :)",
+  },
+   registerScreen: {
+    signIn: "Register",
+    enterDetails:
+      "Welcome to notato bhidu",
+    nameFieldLabel:"Name",
+    usernameFieldLabel:"Username",
+    emailFieldLabel: "Email",
+    passwordFieldLabel: "Password",
+    nameFieldPlaceholder:"Enter your name",
+    usernameFieldPlaceholder:"Enter your username",
+    emailFieldPlaceholder: "Enter your email address",
+    passwordFieldPlaceholder: "Super secret password here",
+    tapToSignIn: "Tap to sign up!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
   demoNavigator: {

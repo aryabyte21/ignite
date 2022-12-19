@@ -1,11 +1,14 @@
-import React, { FC } from "react"
+import React, { FC, useCallback, useState } from "react"
 import * as Application from "expo-application"
-import { Linking, Platform, TextStyle, View, ViewStyle } from "react-native"
-import { Button, ListItem, Screen, Text } from "../components"
+import { ImageStyle, Linking, Platform, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Button, Icon, ListItem, Screen, Text } from "../components"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing } from "../theme"
 import { isRTL } from "../i18n"
 import { useStores } from "../models"
+import DocumentPicker from "react-native-document-picker"
+import PocketBase from "pocketbase"
+const $iconStyle: ImageStyle = { width: 30, height: 30 }
 
 function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url))
@@ -36,6 +39,92 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
     },
     [],
   )
+   async function upload(){
+    const pb = new PocketBase("http://127.0.0.1:8090")
+      const formData = new FormData()
+      const fileInput = document.getElementById("fileInput")
+      fileInput.addEventListener("change", function () {
+        for (let file of fileInput.files) {
+          formData.append("documents", file)
+        }
+      })
+      formData.append("title", "Hello world!")
+      const createdRecord = await pb.collection("example").create(formData)
+
+      ///
+      
+    } 
+      const [singleFile, setSingleFile] = useState(null)
+      const uploadImage = async () => {
+        if (singleFile != null) {
+          // If file selected then create FormData
+          const fileToUpload = singleFile
+          const data = new FormData()
+          data.append("name", "Image Upload")
+          data.append("file_attachment", fileToUpload)
+          // Please change file upload URL
+          let res = await fetch("http://localhost/upload.php", {
+            method: "post",
+            body: data,
+            headers: {
+              "Content-Type": "multipart/form-data; ",
+            },
+          })
+          let responseJson = await res.json()
+          if (responseJson.status == 1) {
+            alert("Upload Successful")
+          } else {
+            // If no file selected the show alert
+            alert("Please Select File first")
+          }
+        }
+      }
+
+    const selectFile = async () => {
+      // Opening Document Picker to select one file
+      try {
+        const res = await DocumentPicker.pick({
+          // Provide which type of file you want user to pick
+          type: [DocumentPicker.types.allFiles],
+          // There can me more options as well
+          // DocumentPicker.types.allFiles
+          // DocumentPicker.types.images
+          // DocumentPicker.types.plainText
+          // DocumentPicker.types.audio
+          // DocumentPicker.types.pdf
+        })
+        // Printing the log realted to the file
+        console.log("res : " + JSON.stringify(res))
+        // Setting the state to show single file attributes
+        setSingleFile(res)
+      } catch (err) {
+        setSingleFile(null)
+        // Handling any exception (If any)
+        if (DocumentPicker.isCancel(err)) {
+          // If user canceled the document selection
+          alert("Canceled")
+        } else {
+          // For Unknown Error
+          alert("Unknown Error: " + JSON.stringify(err))
+          throw err
+        }
+      }
+    }
+
+
+    const [fileResponse, setFileResponse] = useState([])
+
+    const handleDocumentSelection = useCallback(async () => {
+      try {
+        const response = await DocumentPicker.pick({
+          presentationStyle: "fullScreen",
+        })
+        setFileResponse(response)
+      } catch (err) {
+        console.warn(err)
+      }
+    }, [])
+
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top"]} contentContainerStyle={$container}>
@@ -94,9 +183,48 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<"DemoDebug">> = function Dem
       <View style={$buttonContainer}>
         <Button style={$button} tx="common.logOut" onPress={logout} />
       </View>
+      <Button
+        preset="filled"
+        RightAccessory={(props) => (
+          <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />
+        )}
+        onTouchStart={upload}
+      >
+        Upload your notes
+      </Button>
+
+      {/* Showing the data of selected Single file */}
+      {singleFile != null ? (
+        <Text>
+          File Name: {singleFile.name ? singleFile.name : ""}
+          {"\n"}
+          Type: {singleFile.type ? singleFile.type : ""}
+          {"\n"}
+          File Size: {singleFile.size ? singleFile.size : ""}
+          {"\n"}
+          URI: {singleFile.uri ? singleFile.uri : ""}
+          {"\n"}
+        </Text>
+      ) : null}
+      <Button onPress={selectFile}>
+        <Text>Select File</Text>
+      </Button>
+      <Button onPress={uploadImage}>
+        <Text>Upload File</Text>
+      </Button>
+
+      {fileResponse.map((file, index) => (
+        <Text key={index.toString()}  numberOfLines={1} ellipsizeMode={"middle"}>
+          {file?.uri}
+        </Text>
+      ))}
+      <Button onPress={handleDocumentSelection}>
+        <Text>Upload File</Text>
+      </Button>
     </Screen>
   )
 }
+
 
 const $container: ViewStyle = {
   paddingTop: spacing.large + spacing.extraLarge,

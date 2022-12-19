@@ -244,7 +244,7 @@ const EpisodeCard = observer(function EpisodeCard({
       HeadingComponent={
         <View style={$metadata}>
           <Text
-            style={$metadataText}
+            style={$metadataText} 
             size="xxs"
             accessibilityLabel={episode.datePublished.accessibilityLabel}
           >

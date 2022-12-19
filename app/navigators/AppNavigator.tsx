@@ -20,7 +20,9 @@ import { useStores } from "../models" // @demo remove-current-line
 import {
   LoginScreen, // @demo remove-current-line
   WelcomeScreen,
+  RegisterScreen
 } from "../screens"
+import PocketBase from "pocketbase"
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 
@@ -59,6 +61,7 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = StackScreen
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
+  const pb = new PocketBase("http://127.0.0.1:8090")
   // @demo remove-block-start
   const {
     authenticationStore: { isAuthenticated },
